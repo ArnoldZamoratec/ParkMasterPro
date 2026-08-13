@@ -38,6 +38,7 @@ export class ReportService {
         doc.text(`Espacio: ${vehicle.slot}`, 10, 70);
         doc.text(`Ingreso: ${formatDateTime(vehicle.entryTime)}`, 10, 78);
         if (vehicle.customerName) doc.text(`Cliente: ${vehicle.customerName}`, 10, 86, { maxWidth: 60 });
+        if (vehicle.dni) doc.text(`DNI: ${vehicle.dni}`, 10, 94);
         doc.line(8, 100, 72, 100);
         doc.setFontSize(7);
         doc.text('Conserve este ticket. La pérdida puede generar penalidad.', 40, 110, { align: 'center', maxWidth: 68 });
@@ -75,6 +76,7 @@ export class ReportService {
         const body = history.slice().reverse().map(item => [
             item.ticketId,
             item.plate,
+            item.dni || '',
             getTypeLabel(item.type),
             `${formatTime(item.entryTime)} - ${formatTime(item.exitTime)}`,
             `${item.duration} min`,
@@ -84,12 +86,12 @@ export class ReportService {
 
         doc.autoTable({
             startY: 82,
-            head: [['Ticket', 'Placa', 'Tipo', 'Intervalo', 'Duración', 'Pago', 'Monto']],
+            head: [['Ticket', 'Placa', 'DNI', 'Tipo', 'Intervalo', 'Duración', 'Pago', 'Monto']],
             body,
             theme: 'striped',
             headStyles: { fillColor: [4, 120, 87], textColor: [255, 255, 255], fontStyle: 'bold' },
             bodyStyles: { fontSize: 8 },
-            columnStyles: { 6: { halign: 'right', fontStyle: 'bold' } },
+            columnStyles: { 7: { halign: 'right', fontStyle: 'bold' } },
             margin: { left: 14, right: 14 }
         });
 
@@ -102,7 +104,7 @@ export class ReportService {
 
     exportHistoryCsv(history) {
         const rows = [
-            ['ticket', 'placa', 'tipo', 'espacio', 'ingreso', 'salida', 'duracion_min', 'pago', 'monto', 'cliente', 'telefono'],
+            ['ticket', 'placa', 'tipo', 'espacio', 'ingreso', 'salida', 'duracion_min', 'pago', 'monto', 'cliente', 'telefono', 'dni'],
             ...history.map(item => [
                 item.ticketId,
                 item.plate,
@@ -114,7 +116,8 @@ export class ReportService {
                 PAYMENT_LABELS[item.paymentMethod] || item.paymentMethod,
                 Number(item.amount).toFixed(2),
                 item.customerName || '',
-                item.phone || ''
+                item.phone || '',
+                item.dni || ''
             ])
         ];
         downloadBlob(toCsv(rows), `historial_${toDateInputValue(new Date())}.csv`, 'text/csv;charset=utf-8');

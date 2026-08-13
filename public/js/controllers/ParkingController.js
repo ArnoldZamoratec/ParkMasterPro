@@ -1,4 +1,4 @@
-import { normalizePlate, parseDateInput, refreshIcons, toDateInputValue } from '../shared/utils.js';
+import { normalizePlate, parseDateInput, refreshIcons, toDateInputValue, validateDni, validatePlate } from '../shared/utils.js';
 import { confirmDialog, promptDialog } from '../shared/dialogs.js';
 
 export class ParkingController {
@@ -89,10 +89,10 @@ export class ParkingController {
         const plate = normalizePlate(input.plate);
         const plateField = prefix === 'in' ? 'in-plate' : 'inline-plate';
 
-        if (!plate) return this.view.setFieldError(plateField, 'Ingrese una placa válida');
-        if (!/^[A-Z0-9-]{3,12}$/.test(plate)) {
-            return this.view.setFieldError(plateField, 'La placa debe tener 3 a 12 caracteres alfanuméricos');
-        }
+        const plateResult = validatePlate(plate);
+        if (!plateResult.valid) return this.view.setFieldError(plateField, plateResult.message);
+        const dniResult = validateDni(input.dni);
+        if (!dniResult.valid) return this.view.setFieldError(`${prefix}-dni`, dniResult.message);
         if (!input.slot) return this.view.showToast('No hay espacios disponibles', 'error');
         if (this.store.hasActivePlate(plate)) return this.view.setFieldError(plateField, 'Este vehículo ya está en el sistema');
         if (this.store.isSlotOccupied(input.slot)) return this.view.showToast(`El espacio ${input.slot} ya está ocupado`, 'error');

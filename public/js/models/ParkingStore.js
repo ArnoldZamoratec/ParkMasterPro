@@ -2,6 +2,7 @@ import { LEGACY_KEY, STORAGE_KEY } from '../shared/constants.js';
 import {
     makeTicketId,
     minutesBetween,
+    normalizeDni,
     normalizePlate,
     normalizeSearch,
     parseDateInput,
@@ -148,6 +149,7 @@ export class ParkingStore {
             entryTime: vehicle.entryTime || new Date().toISOString(),
             customerName: vehicle.customerName || '',
             phone: vehicle.phone || '',
+            dni: normalizeDni(vehicle.dni || ''),
             notes: vehicle.notes || ''
         };
     }
@@ -267,7 +269,7 @@ export class ParkingStore {
         const normalizedQuery = normalizeSearch(query);
         return this.state.activeVehicles
             .filter(vehicle => {
-                const haystack = [vehicle.plate, vehicle.customerName, vehicle.phone, vehicle.slot, vehicle.ticketId].join(' ');
+                const haystack = [vehicle.plate, vehicle.customerName, vehicle.phone, vehicle.dni, vehicle.slot, vehicle.ticketId].join(' ');
                 return normalizeSearch(haystack).includes(normalizedQuery);
             })
             .sort((a, b) => Number(a.slot) - Number(b.slot));
@@ -286,6 +288,7 @@ export class ParkingStore {
                 item.plate,
                 item.customerName,
                 item.phone,
+                item.dni,
                 item.slot,
                 item.type
             ].join(' ')).includes(normalizedQuery);

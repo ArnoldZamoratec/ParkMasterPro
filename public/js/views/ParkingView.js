@@ -11,6 +11,7 @@ import {
     getTypeLabel,
     getValue,
     minutesBetween,
+    normalizeDni,
     readMoneyInput,
     readPositiveIntegerInput,
     refreshIcons,
@@ -35,7 +36,7 @@ export class ParkingView {
         this.on('cash-movement-form', 'submit', handlers.handleCashMovement);
         this.on('backup-file', 'change', handlers.importBackup);
 
-        ['in-plate', 'inline-plate'].forEach(id => {
+        ['in-plate', 'inline-plate', 'in-dni', 'inline-dni'].forEach(id => {
             this.on(id, 'input', () => this.setFieldError(id, ''));
         });
         this.on('quote-minutes', 'input', handlers.updateQuickQuote);
@@ -131,7 +132,7 @@ export class ParkingView {
                     </td>
                     <td>
                         <div>${escapeHtml(vehicle.customerName || 'Sin cliente')}</div>
-                        <div class="text-xs text-slate-500">${escapeHtml(vehicle.phone || '')}</div>
+                        <div class="text-xs text-slate-500">${escapeHtml(vehicle.phone || '')}${vehicle.dni ? ' · DNI ' + escapeHtml(vehicle.dni) : ''}</div>
                     </td>
                     <td class="text-right">
                         <div class="toolbar justify-end">
@@ -213,7 +214,7 @@ export class ParkingView {
                     </td>
                     <td>
                         <div>${formatTime(item.entryTime)} â†’ ${formatTime(item.exitTime)}</div>
-                        <div class="text-xs text-slate-500">${escapeHtml(item.customerName || 'Sin cliente')}</div>
+                        <div class="text-xs text-slate-500">${escapeHtml(item.customerName || 'Sin cliente')}${item.dni ? ' · DNI ' + escapeHtml(item.dni) : ''}</div>
                     </td>
                     <td>${Number(item.duration) || 0} min</td>
                     <td>${escapeHtml(PAYMENT_LABELS[item.paymentMethod] || item.paymentMethod || 'Efectivo')}</td>
@@ -494,12 +495,13 @@ export class ParkingView {
             slot: Number(getValue(`${prefix}-slot`)),
             customerName: getValue(`${prefix}-customer`).trim(),
             phone: getValue(`${prefix}-phone`).trim(),
+            dni: normalizeDni(getValue(`${prefix}-dni`)),
             notes: getValue(`${prefix}-notes`).trim()
         };
     }
 
     clearEntryInputs(prefix) {
-        [`${prefix}-plate`, `${prefix}-customer`, `${prefix}-phone`, `${prefix}-notes`].forEach(id => setValue(id, ''));
+        [`${prefix}-plate`, `${prefix}-customer`, `${prefix}-phone`, `${prefix}-dni`, `${prefix}-notes`].forEach(id => setValue(id, ''));
     }
 
     getCheckoutOptions() {

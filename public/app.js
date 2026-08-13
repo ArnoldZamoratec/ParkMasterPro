@@ -15,4 +15,24 @@ const controller = new ParkingController({
     reportService
 });
 
-document.addEventListener('DOMContentLoaded', () => controller.init());
+const TEXT_SCALE_KEY = 'parkmaster_text_scale';
+
+function applyTextScale(scale) {
+    document.documentElement.dataset.textScale = scale;
+    try { localStorage.setItem(TEXT_SCALE_KEY, scale); } catch (_) {}
+    const sel = document.getElementById('text-scale-select');
+    if (sel) sel.value = scale;
+}
+
+function initTextScale() {
+    let scale = 'md';
+    try { scale = localStorage.getItem(TEXT_SCALE_KEY) || 'md'; } catch (_) {}
+    applyTextScale(scale);
+}
+
+window.setTextScale = scale => applyTextScale(scale);
+
+document.addEventListener('DOMContentLoaded', () => {
+    initTextScale();
+    controller.init();
+});

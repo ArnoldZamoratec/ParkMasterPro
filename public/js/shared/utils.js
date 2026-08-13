@@ -4,6 +4,32 @@ export function normalizePlate(value) {
     return String(value || '').toUpperCase().replace(/\s+/g, '').replace(/[^A-Z0-9-]/g, '');
 }
 
+const PLATE_PATTERN = /^([A-Z]{3}\d{3}|[A-Z]{2}\d{4}|[A-Z]\d[A-Z]\d{3}|[A-Z]{3}\d{4})$/;
+
+export function validatePlate(plate) {
+    const core = String(plate || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+    if (!core) return { valid: false, message: 'Ingrese una placa' };
+    if (!PLATE_PATTERN.test(core)) {
+        return {
+            valid: false,
+            message: 'Formato de placa inválido. Use ABC-123 (auto/bus), AB-1234 (moto) o ABC-1234 (moto nueva).'
+        };
+    }
+    return { valid: true, message: '' };
+}
+
+export function normalizeDni(value) {
+    return String(value || '').replace(/\D/g, '').slice(0, 8);
+}
+
+export function validateDni(dni) {
+    if (!dni) return { valid: true, message: '' };
+    if (!/^\d{8}$/.test(dni)) {
+        return { valid: false, message: 'El DNI debe tener exactamente 8 dígitos' };
+    }
+    return { valid: true, message: '' };
+}
+
 export function normalizeSearch(value) {
     return String(value || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
 }
