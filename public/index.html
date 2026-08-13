@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ParkMaster Pro GARAJE</title>
-    <meta name="description" content="Sistema avanzado de gestión de estacionamiento con estadísticas en tiempo real y mapa visual.">
-    
-    <!-- Scripts & Styles -->
+    <title>ParkMaster Pro</title>
+    <meta name="description" content="Sistema integral para operar cocheras, caja, tarifas, reportes y respaldos.">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -16,501 +14,752 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body class="bg-slate-50 text-slate-900 overflow-hidden font-['Plus_Jakarta_Sans']">
-    <!-- 1. LOGIN / AUTH SCREEN -->
-    <div id="auth-screen" class="fixed inset-0 bg-slate-900 z-[100] flex flex-col items-center justify-center p-6 transition-all duration-500">
-        <div class="w-full max-w-md bg-white p-10 rounded-[2.5rem] shadow-2xl animate-fade-in relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-indigo-500 to-violet-500"></div>
-            <div class="flex flex-col items-center text-center mb-8">
-                <div class="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600 mb-4 shadow-sm">
-                    <i data-lucide="parking-square" class="w-8 h-8"></i>
+<body class="bg-slate-100 text-slate-900 font-['Plus_Jakarta_Sans']">
+    <a href="#main-content" class="skip-link">Saltar al contenido</a>
+    <div id="auth-screen" class="fixed inset-0 bg-slate-950 z-[100] flex flex-col items-center justify-center p-6 transition-all duration-300">
+        <div class="w-full max-w-md bg-white p-8 rounded-xl shadow-2xl border border-slate-200">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-indigo-600 rounded-lg flex items-center justify-center text-white">
+                    <i data-lucide="parking-square" class="w-7 h-7"></i>
                 </div>
-                <h1 class="text-3xl font-black text-slate-900 tracking-tighter">ParkMaster<span class="text-indigo-600">Pro</span></h1>
-                <p class="text-slate-500 text-sm font-medium mt-1">Acceso al Sistema Integrado</p>
+                <div>
+                    <h1 class="text-2xl font-black tracking-tight">ParkMaster Pro</h1>
+                    <p class="text-sm text-slate-500 font-semibold">Acceso operativo</p>
+                </div>
             </div>
-            
-            <form id="auth-form" class="space-y-5">
+
+            <form id="auth-form" class="space-y-4">
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Correo Electrónico</label>
-                    <input type="email" id="auth-email" required class="w-full px-5 py-4 bg-slate-50 border-2 border-transparent rounded-2xl text-sm font-bold focus:bg-white focus:border-indigo-100 focus:outline-none focus:ring-4 focus:ring-indigo-50 transition-all text-slate-800" placeholder="admin@empresa.com">
+                    <label class="form-label" for="auth-email">Correo electrónico</label>
+                    <input type="email" id="auth-email" required class="form-control" placeholder="admin@empresa.com" autocomplete="email">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Contraseña</label>
-                    <input type="password" id="auth-password" required class="w-full px-5 py-4 bg-slate-50 border-2 border-transparent rounded-2xl text-sm font-bold focus:bg-white focus:border-indigo-100 focus:outline-none focus:ring-4 focus:ring-indigo-50 transition-all text-slate-800" placeholder="••••••••">
+                    <label class="form-label" for="auth-password">Contraseña</label>
+                    <input type="password" id="auth-password" required class="form-control" placeholder="••••••••" autocomplete="current-password">
                 </div>
-                
-                <button type="submit" id="btn-login" class="w-full py-4 mt-2 bg-slate-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-indigo-600 transition-all transform active:scale-95 shadow-lg shadow-slate-200">
-                    Iniciar Sesión
+                <button type="submit" id="btn-login" class="btn btn-primary w-full justify-center">
+                    Iniciar sesión
                 </button>
             </form>
-            
-            <p id="auth-error" class="hidden mt-4 text-xs font-bold text-red-500 text-center bg-red-50 py-3 rounded-xl border border-red-100"></p>
+
+            <p id="auth-error" class="hidden mt-4 text-sm font-bold text-red-600 bg-red-50 py-3 px-4 rounded-lg border border-red-100" role="alert"></p>
         </div>
-        <p class="mt-8 text-slate-500 font-bold text-[10px] uppercase tracking-widest">ING. ARNOLD SOLUCIONES © 2026</p>
+        <p class="mt-6 text-slate-500 font-bold text-xs uppercase tracking-widest">ING. ARNOLD SOLUCIONES © 2026</p>
     </div>
 
-    <!-- 2. PAYMENT / LICENSE BLOCK SCREEN -->
-    <div id="payment-block" class="hidden fixed inset-0 bg-red-600 z-[90] flex-col items-center justify-center p-6 text-white transition-all duration-500">
-        <div class="bg-black/20 p-10 rounded-[3rem] backdrop-blur-md max-w-xl text-center border border-white/10 shadow-2xl animate-fade-in relative overflow-hidden">
-            <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/5 rounded-full blur-2xl"></div>
-            <i data-lucide="lock" class="w-20 h-20 mx-auto text-red-200 mb-6 drop-shadow-md"></i>
-            <h2 class="text-4xl font-black mb-2 tracking-tighter">LICENCIA EXPIRADA</h2>
-            <p class="text-red-100 text-sm md:text-base font-medium mb-8 leading-relaxed">Sus 30 días de acceso gratuito al sistema ParkMaster Pro han concluido. Para restaurar el acceso inmediato a todos sus datos y funciones operativas, por favor regularice su suscripción.</p>
-            <div class="inline-flex flex-col gap-2 p-6 bg-black/30 rounded-3xl border border-white/10 w-full mb-6">
-                <span class="text-[10px] font-black uppercase tracking-[0.2em] text-red-300">Soporte Técnico & Pagos</span>
-                <span class="text-xl font-black">huamanzamoraarnold@gmail.com</span>
+    <div id="payment-block" class="hidden fixed inset-0 bg-red-700 z-[90] flex-col items-center justify-center p-6 text-white">
+        <div class="bg-red-950/30 p-8 rounded-xl max-w-xl text-center border border-white/10 shadow-2xl">
+            <i data-lucide="lock" class="w-16 h-16 mx-auto text-red-200 mb-5"></i>
+            <h2 class="text-3xl font-black mb-2 tracking-tight">Licencia expirada</h2>
+            <p class="text-red-100 text-sm md:text-base font-medium mb-6 leading-relaxed">Sus 30 días de acceso gratuito han concluido. Para restaurar el acceso a sus datos y funciones, regularice su suscripción.</p>
+            <div class="p-4 bg-black/20 rounded-lg border border-white/10 w-full mb-5">
+                <span class="block text-xs font-black uppercase tracking-widest text-red-200">Soporte técnico y pagos</span>
+                <span class="block text-lg font-black break-all">huamanzamoraarnold@gmail.com</span>
             </div>
-            <button onclick="window.fbLogout()" class="px-8 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-colors backdrop-blur-sm border border-white/20">
-                Cerrar Sesión Segura
+            <button onclick="window.fbLogout()" class="btn bg-white/10 hover:bg-white/20 text-white border border-white/20">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+                Cerrar sesión
             </button>
         </div>
     </div>
 
-    <!-- 3. MAIN APP SHELL (Hidden until Auth) -->
-    <div id="app-shell" class="hidden flex h-screen overflow-hidden w-full relative">
-        
-        <!-- Mobile Sidebar Overlay -->
-        <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 hidden md:hidden transition-opacity opacity-0"></div>
+    <div id="app-shell" class="hidden flex h-screen overflow-hidden w-full">
+        <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 z-40 hidden md:hidden opacity-0 transition-opacity"></div>
 
-        <!-- Sidebar -->
-        <aside id="main-sidebar" class="fixed md:static inset-y-0 left-0 w-72 bg-white border-r border-slate-200 flex flex-col shrink-0 z-50 shadow-2xl md:shadow-xl shadow-slate-200/50 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
-            <div class="p-6 md:p-8">
+        <aside id="main-sidebar" aria-label="Menú de navegación" class="fixed md:static inset-y-0 left-0 w-72 bg-white border-r border-slate-200 flex flex-col shrink-0 z-50 shadow-xl md:shadow-none transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+            <div class="p-5 border-b border-slate-100">
                 <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3 text-indigo-600 font-extrabold text-xl md:text-2xl tracking-tight">
-                        <div class="bg-indigo-600 text-white p-2 rounded-2xl shadow-lg shadow-indigo-200 animate-pulse-subtle">
-                            <i data-lucide="parking-square" class="w-6 h-6 md:w-7 md:h-7"></i>
+                    <div class="flex items-center gap-3">
+                        <div class="bg-indigo-600 text-white p-2 rounded-lg">
+                            <i data-lucide="parking-square" class="w-6 h-6"></i>
                         </div>
-                        <span>ParkMaster<span class="text-slate-400 font-semibold">Pro</span></span>
+                        <div>
+                            <p class="font-black text-xl tracking-tight">ParkMaster Pro</p>
+                            <p id="sidebar-company" class="text-xs text-slate-500 font-black uppercase tracking-widest">Cochera</p>
+                        </div>
                     </div>
-                    <button onclick="toggleSidebar()" class="md:hidden p-2 text-slate-400 hover:text-slate-600 bg-slate-50 rounded-xl">
+                    <button onclick="toggleSidebar()" id="btn-sidebar-close" class="md:hidden icon-button" title="Cerrar menú" aria-label="Cerrar menú" aria-controls="main-sidebar" aria-expanded="true">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
-                <p class="text-[10px] text-slate-400 mt-2 font-bold uppercase tracking-[0.2em] px-1">ING. ARNOLD SOLUCIONES</p>
             </div>
 
-            <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto hide-scrollbar">
-                <button onclick="changeTab('dashboard')" id="nav-dashboard" class="sidebar-link active w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-sm font-bold transition-all duration-300">
+            <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto hide-scrollbar" aria-label="Secciones principales">
+                <button onclick="changeTab('dashboard')" id="nav-dashboard" class="sidebar-link active">
                     <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
                 </button>
-                <button onclick="changeTab('map')" id="nav-map" class="sidebar-link w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-sm font-bold text-slate-500 hover:bg-slate-50 transition-all duration-300">
-                    <i data-lucide="map" class="w-5 h-5"></i> Mapa de Espacios
+                <button onclick="changeTab('operations')" id="nav-operations" class="sidebar-link">
+                    <i data-lucide="clipboard-list" class="w-5 h-5"></i> Operación
                 </button>
-                <button onclick="changeTab('history')" id="nav-history" class="sidebar-link w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-sm font-bold text-slate-500 hover:bg-slate-50 transition-all duration-300">
-                    <i data-lucide="history" class="w-5 h-5"></i> Historial / Arqueo
+                <button onclick="changeTab('map')" id="nav-map" class="sidebar-link">
+                    <i data-lucide="map" class="w-5 h-5"></i> Mapa
                 </button>
-                
-                <div class="pt-8 pb-3 px-5 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Ajustes</div>
-                <button onclick="changeTab('settings')" id="nav-settings" class="sidebar-link w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-sm font-bold text-slate-500 hover:bg-slate-50 transition-all duration-300">
-                    <i data-lucide="settings-2" class="w-5 h-5"></i> Tarifas y Cochera
+                <button onclick="changeTab('history')" id="nav-history" class="sidebar-link">
+                    <i data-lucide="history" class="w-5 h-5"></i> Historial
+                </button>
+                <button onclick="changeTab('cash')" id="nav-cash" class="sidebar-link">
+                    <i data-lucide="wallet-cards" class="w-5 h-5"></i> Caja
+                </button>
+                <button onclick="changeTab('settings')" id="nav-settings" class="sidebar-link">
+                    <i data-lucide="settings-2" class="w-5 h-5"></i> Ajustes
                 </button>
 
-                <div id="admin-nav-group" class="hidden">
-                    <div class="pt-8 pb-3 px-5 text-[10px] font-extrabold text-indigo-400 uppercase tracking-widest">Super Admin</div>
-                    <button onclick="changeTab('superadmin')" id="nav-superadmin" class="sidebar-link w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-sm font-bold text-slate-500 hover:bg-indigo-50 hover:text-indigo-600 transition-all duration-300">
+                <div id="admin-nav-group" class="hidden pt-4">
+                    <p class="px-4 py-2 text-xs font-black text-indigo-600 uppercase tracking-widest">Super Admin</p>
+                    <button onclick="changeTab('superadmin')" id="nav-superadmin" class="sidebar-link">
                         <i data-lucide="shield-check" class="w-5 h-5"></i> Panel SaaS
                     </button>
                 </div>
             </nav>
 
-            <div class="p-6 border-t border-slate-50 space-y-4">
-                <div class="glass-card p-4 rounded-2xl bg-indigo-50/50 border border-indigo-100 flex items-center gap-3">
+            <div class="p-4 border-t border-slate-100 space-y-3">
+                <div class="p-3 rounded-lg bg-slate-50 border border-slate-100 flex items-center gap-3">
                     <div class="relative shrink-0">
-                        <div class="w-2.5 h-2.5 bg-emerald-500 rounded-full absolute -right-0.5 -bottom-0.5 border-2 border-white shadow-sm pulse-fast"></div>
-                        <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-xs" id="sidebar-user-avatar">C</div>
+                        <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full absolute -right-0.5 -bottom-0.5 border-2 border-white"></span>
+                        <div class="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-black text-xs" id="sidebar-user-avatar" aria-hidden="true">C</div>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-[10px] font-bold text-indigo-900 truncate" id="sidebar-user-email">Cargando...</p>
-                        <p class="text-[8px] font-black tracking-widest uppercase text-indigo-400" id="sidebar-trial-status">SESIÓN ACTIVA</p>
+                        <p class="text-xs font-bold text-slate-800 truncate" id="sidebar-user-email">Cargando...</p>
+                        <p class="text-[11px] font-black tracking-widest uppercase text-slate-500" id="sidebar-trial-status">Sesión activa</p>
                     </div>
                 </div>
-                <button onclick="window.fbLogout()" class="w-full flex items-center justify-center gap-2 py-3 mt-2 rounded-xl text-xs font-bold text-red-500 bg-red-50 border border-red-100 hover:bg-red-500 hover:text-white transition-all transform active:scale-95">
-                    <i data-lucide="log-out" class="w-4 h-4"></i> Cerrar Sesión
+                <button onclick="window.fbLogout()" class="btn btn-danger-soft w-full justify-center">
+                    <i data-lucide="log-out" class="w-4 h-4"></i>
+                    Cerrar sesión
                 </button>
             </div>
         </aside>
 
-        <!-- Main Content -->
-        <main class="flex-1 flex flex-col overflow-hidden relative min-w-0">
-            <div class="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-indigo-50/30 to-transparent -z-10"></div>
-            
-            <!-- Topbar -->
-            <header class="h-16 md:h-20 bg-white/70 backdrop-blur-md border-b border-slate-200/50 flex items-center justify-between px-4 md:px-10 shrink-0 sticky top-0 z-10 w-full">
-                <div class="flex items-center gap-3 md:gap-0">
-                    <button onclick="toggleSidebar()" class="md:hidden p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors">
-                        <i data-lucide="menu" class="w-6 h-6"></i>
+        <main id="main-content" tabindex="-1" class="flex-1 flex flex-col overflow-hidden min-w-0">
+            <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-6 shrink-0">
+                <div class="flex items-center gap-3 min-w-0">
+                    <button onclick="toggleSidebar()" id="btn-sidebar-open" class="md:hidden icon-button" title="Abrir menú" aria-label="Abrir menú" aria-controls="main-sidebar" aria-expanded="false">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
                     </button>
-                    <div class="flex flex-col">
-                        <h2 id="view-title" class="font-black text-lg md:text-2xl text-slate-900 tracking-tight">Panel de Control</h2>
-                        <p id="current-date" class="text-[9px] md:text-[11px] font-bold text-slate-400 uppercase tracking-wider hidden sm:block"></p>
+                    <div class="min-w-0">
+                        <h2 id="view-title" class="font-black text-lg md:text-xl text-slate-900 tracking-tight truncate">Dashboard</h2>
+                        <p id="current-date" class="text-xs font-bold text-slate-500 uppercase tracking-wider hidden sm:block"></p>
                     </div>
                 </div>
-                <div class="flex items-center gap-3 md:gap-6">
-                    <div class="bg-slate-100/50 px-4 py-2 rounded-2xl border border-slate-200 hidden lg:block">
+                <div class="flex items-center gap-2 md:gap-3">
+                    <div class="hidden lg:flex items-center gap-2 bg-slate-50 px-3 py-2 rounded-lg border border-slate-200">
+                        <i data-lucide="clock-3" class="w-4 h-4 text-slate-500"></i>
                         <p id="current-time" class="text-sm font-black text-slate-700 font-mono"></p>
                     </div>
-                    <button onclick="openEntryModal()" class="bg-slate-900 hover:bg-indigo-600 text-white px-6 py-3 rounded-2xl text-sm font-bold flex items-center gap-2 transition-all duration-300 scale-hover shadow-xl shadow-slate-100">
-                        <i data-lucide="circle-plus" class="w-5 h-5"></i> Ingreso Rápido
+                    <button onclick="exportBackup()" class="icon-button hidden sm:inline-flex" title="Exportar respaldo" aria-label="Exportar respaldo">
+                        <i data-lucide="download" class="w-5 h-5"></i>
+                    </button>
+                    <button onclick="openEntryModal()" class="btn btn-primary">
+                        <i data-lucide="circle-plus" class="w-5 h-5"></i>
+                        <span class="hidden sm:inline">Ingreso rápido</span>
                     </button>
                 </div>
             </header>
 
-            <div class="flex-1 overflow-y-auto px-4 py-6 md:p-10 hide-scrollbar space-y-6 md:space-y-10 w-full">
-                
-                <!-- TAB: DASHBOARD -->
-                <div id="tab-dashboard" class="tab-content transition-tab opacity-100 scale-100 space-y-6 md:space-y-10">
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-10">
-                        <!-- Card 1: Ocupación -->
-                        <div class="stat-card p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] bg-white border border-slate-100 shadow-lg shadow-slate-100 hover:shadow-2xl hover:shadow-indigo-50 transition-all duration-500 hover:-translate-y-1 md:hover:-translate-y-2 relative group overflow-hidden">
-                            <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-bl-full -z-10 group-hover:scale-110 transition-transform duration-700"></div>
-                            <div class="flex justify-between items-start mb-6">
-                                <div class="p-4 bg-indigo-50 text-indigo-600 rounded-2xl group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-500 shadow-sm">
-                                    <i data-lucide="layout-grid" class="w-6 h-6"></i>
-                                </div>
-                                <span class="badge text-indigo-700 bg-indigo-50 border-indigo-100 font-bold uppercase tracking-widest text-[9px] px-3 py-1.5 shadow-sm">Capacidad</span>
+            <div class="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
+                <section id="tab-dashboard" class="tab-content space-y-6">
+                    <div class="grid grid-cols-2 xl:grid-cols-5 gap-3 md:gap-4">
+                        <article class="metric-card">
+                            <div class="metric-icon bg-indigo-50 text-indigo-600"><i data-lucide="layout-grid" class="w-5 h-5"></i></div>
+                            <p class="metric-label">Ocupación</p>
+                            <h3 id="stat-occupancy" class="metric-value">0/50</h3>
+                            <div class="w-full bg-slate-100 rounded-full h-2 mt-3 overflow-hidden">
+                                <div id="occupancy-progress" class="bg-indigo-600 h-full rounded-full transition-all"></div>
                             </div>
-                            <h3 id="stat-occupancy" class="text-6xl font-black mb-2 text-slate-800 tracking-tighter drop-shadow-sm">0/50</h3>
-                            <div class="w-full bg-slate-100 rounded-full h-2.5 mt-6 overflow-hidden p-0.5">
-                                <div id="occupancy-progress" class="bg-gradient-to-r from-indigo-500 to-violet-500 h-full rounded-full transition-all duration-1000 ease-out relative shadow-[0_0_10px_rgba(99,102,241,0.5)]">
-                                    <div class="absolute inset-0 bg-white/20 w-full h-full animate-[shimmer_2s_infinite]"></div>
-                                </div>
-                            </div>
-                            <p class="text-[10px] text-slate-400 font-bold mt-3 uppercase tracking-widest text-right">Ocupación Actual</p>
-                        </div>
-
-                        <!-- Card 2: Recaudación (Fintech Style) -->
-                        <div class="stat-card p-8 rounded-[2.5rem] bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 text-white shadow-2xl shadow-indigo-900/20 hover:-translate-y-2 transition-all duration-500 relative overflow-hidden group border border-slate-700">
-                            <!-- Efectos de luz -->
-                            <div class="absolute -top-16 -right-16 w-32 h-32 bg-emerald-500/20 blur-3xl rounded-full group-hover:bg-emerald-500/30 transition-all duration-700"></div>
-                            <div class="absolute -bottom-16 -left-16 w-40 h-40 bg-indigo-500/20 blur-3xl rounded-full"></div>
-                            
-                            <div class="flex justify-between items-start mb-6 relative z-10">
-                                <div class="p-4 bg-white/10 backdrop-blur-md text-emerald-400 rounded-2xl border border-white/5 shadow-inner">
-                                    <i data-lucide="banknote" class="w-6 h-6"></i>
-                                </div>
-                                <span class="px-3 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-widest bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                                    Caja
-                                </span>
-                            </div>
-                            <p class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-1 relative z-10">Ingresos del Día</p>
-                            <h3 id="stat-revenue" class="text-5xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-emerald-200 tracking-tighter drop-shadow-md relative z-10 filter hover:brightness-125 transition-all">S/ 0.00</h3>
-                        </div>
-
-                        <!-- Card 3: Activos -->
-                        <div class="stat-card p-8 rounded-[2.5rem] bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-500 text-white shadow-2xl shadow-indigo-500/30 hover:-translate-y-2 transition-all duration-500 overflow-hidden relative group">
-                            <div class="absolute -right-8 -bottom-8 opacity-10 rotate-12 group-hover:rotate-0 transition-transform duration-700 group-hover:scale-110">
-                                <i data-lucide="car" class="w-48 h-48"></i>
-                            </div>
-                            <div class="relative z-10">
-                                <div class="flex justify-between items-start mb-6">
-                                    <div class="p-4 bg-white/20 backdrop-blur-sm text-white rounded-2xl shadow-inner border border-white/10 group-hover:bg-white group-hover:text-indigo-600 transition-colors">
-                                        <i data-lucide="car-front" class="w-6 h-6"></i>
-                                    </div>
-                                    <span class="px-3 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-widest bg-white/20 text-white border border-white/20 backdrop-blur-md">En Cochera</span>
-                                </div>
-                                <p class="text-indigo-100 text-xs font-bold uppercase tracking-widest mb-1">Vehículos Activos</p>
-                                <div class="flex items-baseline gap-2">
-                                    <h3 id="stat-pending" class="text-6xl font-black tracking-tighter drop-shadow-md">0</h3>
-                                    <span class="text-indigo-200 font-bold tracking-widest text-sm">UNID.</span>
-                                </div>
-                            </div>
-                        </div>
+                        </article>
+                        <article class="metric-card">
+                            <div class="metric-icon bg-emerald-50 text-emerald-600"><i data-lucide="banknote" class="w-5 h-5"></i></div>
+                            <p class="metric-label">Ingresos del día</p>
+                            <h3 id="stat-revenue" class="metric-value">S/ 0.00</h3>
+                            <p id="stat-payment-mix" class="metric-note">Sin cobros</p>
+                        </article>
+                        <article class="metric-card">
+                            <div class="metric-icon bg-amber-50 text-amber-600"><i data-lucide="car-front" class="w-5 h-5"></i></div>
+                            <p class="metric-label">Vehículos activos</p>
+                            <h3 id="stat-pending" class="metric-value">0</h3>
+                            <p class="metric-note">En cochera</p>
+                        </article>
+                        <article class="metric-card">
+                            <div class="metric-icon bg-sky-50 text-sky-600"><i data-lucide="timer" class="w-5 h-5"></i></div>
+                            <p class="metric-label">Estancia promedio</p>
+                            <h3 id="stat-avg-stay" class="metric-value">0 min</h3>
+                            <p class="metric-note">Historial filtrado al día</p>
+                        </article>
+                        <article class="metric-card col-span-2 xl:col-span-1">
+                            <div class="metric-icon bg-slate-100 text-slate-700"><i data-lucide="wallet" class="w-5 h-5"></i></div>
+                            <p class="metric-label">Turno de caja</p>
+                            <h3 id="stat-shift" class="metric-value text-base">Sin turno</h3>
+                            <p id="stat-shift-detail" class="metric-note">Abra caja para auditoría</p>
+                        </article>
                     </div>
 
-                    <div class="bg-white rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden min-h-[400px]">
-                        <div class="p-10 border-b border-slate-50 flex flex-col sm:flex-row items-center justify-between gap-6">
-                            <div class="flex items-center gap-4">
-                                <div class="w-1.5 h-8 bg-indigo-600 rounded-full"></div>
-                                <h3 class="font-black text-xl text-slate-800">Coches en Estacionamiento</h3>
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <h3 class="panel-title">Vehículos en estacionamiento</h3>
+                                <p class="panel-subtitle">Búsqueda por placa, cliente, teléfono o espacio.</p>
                             </div>
-                            <div class="relative group">
-                                <input type="text" id="search-plate" onkeyup="renderDashboard()" placeholder="Buscar por placa..." class="pl-14 pr-8 py-4 bg-slate-50 border-2 border-transparent rounded-[2rem] text-sm font-bold focus:bg-white focus:border-indigo-100 focus:outline-none focus:ring-4 focus:ring-indigo-50 transition-all w-80">
-                                <i data-lucide="search" class="w-5 h-5 absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-indigo-500 transition-colors"></i>
-                            </div>
-                        </div>
-                        <div id="active-list" class="divide-y divide-slate-50">
-                            <!-- Injected by JS -->
-                        </div>
-                        <div id="no-active" class="hidden flex flex-col items-center justify-center py-32 animate-fade-in">
-                            <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mb-6">
-                                <i data-lucide="car-front" class="w-10 h-10 text-slate-200"></i>
-                            </div>
-                            <p class="text-slate-400 font-bold tracking-tight text-lg">No hay vehículos registrados</p>
-                            <p class="text-slate-300 text-sm mt-1">Utiliza el botón de "Ingreso Rápido" para comenzar.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TAB: MAPA -->
-                <div id="tab-map" class="tab-content hidden animate-fade-in space-y-10">
-                    <div class="flex items-center justify-between">
-                        <div class="space-y-1">
-                            <h3 class="font-black text-3xl tracking-tight">Distribución Espacial</h3>
-                            <p class="text-slate-400 text-sm font-medium">Haz click en un espacio ocupado para liberar.</p>
-                        </div>
-                        <div class="flex gap-6">
-                            <div class="flex items-center gap-2 group cursor-help" title="Espacios libres para estacionar">
-                                <div class="w-5 h-5 bg-slate-100 border-2 border-slate-200 rounded-lg group-hover:border-indigo-200 transition-all"></div>
-                                <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Disponible</span>
-                            </div>
-                            <div class="flex items-center gap-2 group cursor-help" title="Espacios con vehículo asignado">
-                                <div class="w-5 h-5 bg-indigo-600 rounded-lg shadow-lg shadow-indigo-100"></div>
-                                <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Ocupado</span>
+                            <div class="toolbar">
+                                <div class="input-icon">
+                                    <i data-lucide="search" class="w-4 h-4"></i>
+                                    <input type="text" id="search-plate" oninput="renderDashboard()" placeholder="Buscar..." class="form-control compact">
+                                </div>
+                                <button onclick="openEntryModal()" class="btn btn-secondary">
+                                    <i data-lucide="plus" class="w-4 h-4"></i>
+                                    Ingreso
+                                </button>
                             </div>
                         </div>
-                    </div>
-                    <div id="parking-grid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-10 gap-5">
-                        <!-- Injected by JS -->
-                    </div>
-                </div>
-
-                <!-- TAB: HISTORY -->
-                <div id="tab-history" class="tab-content hidden animate-fade-in space-y-10">
-                    <div class="flex items-center justify-between">
-                        <div class="space-y-1">
-                            <h3 class="font-black text-3xl tracking-tight">Reporte de Arqueo</h3>
-                            <p class="text-slate-400 text-sm font-medium">Resumen de todos los movimientos del día.</p>
-                        </div>
-                        <div class="flex gap-4">
-                            <button onclick="downloadDailyReport()" class="flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-2xl font-bold text-sm hover:bg-slate-900 transition-all shadow-xl shadow-indigo-100">
-                                <i data-lucide="download" class="w-4 h-4"></i> Descargar Boleta PDF
-                            </button>
-                            <button onclick="clearHistory()" class="group flex items-center gap-2 px-6 py-3 bg-red-50 text-red-600 rounded-2xl font-bold text-sm hover:bg-red-600 hover:text-white transition-all shadow-sm">
-                                <i data-lucide="trash-2" class="w-4 h-4 group-hover:rotate-12 transition-transform"></i> Reiniciar Día
-                            </button>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden">
                         <div class="overflow-x-auto">
-                            <table class="w-full text-left">
-                                <thead class="bg-slate-50/50 border-b border-slate-100">
+                            <table class="data-table" aria-label="Vehículos en estacionamiento">
+                                <thead>
                                     <tr>
-                                        <th class="px-10 py-6 text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Vehículo</th>
-                                        <th class="px-10 py-6 text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Intervalo</th>
-                                        <th class="px-10 py-6 text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Duración</th>
-                                        <th class="px-10 py-6 text-right text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Monto Final</th>
+                                        <th scope="col">Placa</th>
+                                        <th scope="col">Tipo</th>
+                                        <th scope="col">Espacio</th>
+                                        <th scope="col">Ingreso</th>
+                                        <th scope="col">Cliente</th>
+                                        <th scope="col" class="text-right">Acciones</th>
                                     </tr>
                                 </thead>
-                                <tbody id="history-body" class="divide-y divide-slate-50">
-                                    <!-- Injected by JS -->
-                                </tbody>
+                                <tbody id="active-list"></tbody>
                             </table>
                         </div>
-                        <div id="no-history" class="hidden flex flex-col items-center justify-center py-24">
-                            <p class="text-slate-300 font-bold">No hay transacciones registradas hoy.</p>
+                        <div id="no-active" class="empty-state hidden">
+                            <i data-lucide="car-front" class="w-10 h-10 text-slate-300"></i>
+                            <p>No hay vehículos registrados.</p>
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <!-- TAB: SETTINGS -->
-                <div id="tab-settings" class="tab-content hidden animate-fade-in max-w-3xl mx-auto space-y-10">
-                    <div class="bg-white p-12 rounded-[3.5rem] border border-slate-100 shadow-sm">
-                        <div class="flex items-center gap-6 mb-12">
-                            <div class="w-16 h-16 bg-slate-900 text-white rounded-[2rem] flex items-center justify-center">
-                                <i data-lucide="cog" class="w-8 h-8"></i>
+                <section id="tab-operations" class="tab-content hidden space-y-6">
+                    <div class="grid xl:grid-cols-[1fr_380px] gap-6">
+                        <div class="panel">
+                            <div class="panel-header">
+                                <div>
+                                    <h3 class="panel-title">Ingreso operativo</h3>
+                                    <p class="panel-subtitle">Registro rápido con datos opcionales para ticket y contacto.</p>
+                                </div>
                             </div>
-                            <h3 class="font-black text-3xl tracking-tight">Parametrización</h3>
+                            <form id="inline-entry-form" class="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="form-label" for="inline-plate">Placa</label>
+                                    <input type="text" id="inline-plate" class="form-control uppercase" placeholder="ABC-123" aria-describedby="inline-plate-error">
+                                    <p id="inline-plate-error" class="field-error hidden" role="alert"></p>
+                                </div>
+                                <div>
+                                    <label class="form-label" for="inline-type">Tipo</label>
+                                    <select id="inline-type" class="form-control"></select>
+                                </div>
+                                <div>
+                                    <label class="form-label" for="inline-slot">Espacio</label>
+                                    <select id="inline-slot" class="form-control"></select>
+                                </div>
+                                <div>
+                                    <label class="form-label" for="inline-customer">Cliente</label>
+                                    <input type="text" id="inline-customer" class="form-control" placeholder="Opcional">
+                                </div>
+                                <div>
+                                    <label class="form-label" for="inline-phone">Teléfono</label>
+                                    <input type="tel" id="inline-phone" class="form-control" placeholder="Opcional">
+                                </div>
+                                <div class="flex items-end">
+                                    <button type="submit" class="btn btn-primary w-full justify-center">
+                                        <i data-lucide="check" class="w-4 h-4"></i>
+                                        Registrar
+                                    </button>
+                                </div>
+                                <div class="md:col-span-2 xl:col-span-3">
+                                    <label class="form-label" for="inline-notes">Notas</label>
+                                    <textarea id="inline-notes" class="form-control min-h-[80px]" placeholder="Observaciones, color, daño visible, convenio, etc."></textarea>
+                                </div>
+                            </form>
                         </div>
-                        
-                        <div class="space-y-12">
-                            <div class="grid md:grid-cols-2 gap-10">
-                                <div class="space-y-4">
-                                    <label class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] px-2">Capacidad Total</label>
-                                    <div class="flex gap-4">
-                                        <input type="number" id="set-slots" value="50" class="flex-1 px-8 py-4 bg-slate-50 border-2 border-transparent rounded-[2rem] font-bold focus:bg-white focus:border-indigo-100 focus:outline-none transition-all">
-                                    </div>
-                                </div>
-                                <div class="pt-8 md:pt-0">
-                                    <div class="bg-indigo-50/50 p-6 rounded-3xl border border-indigo-100 flex items-start gap-4">
-                                        <i data-lucide="info" class="w-5 h-5 text-indigo-400 mt-1"></i>
-                                        <p class="text-xs text-indigo-400 font-medium leading-relaxed">Asegúrate de no reducir la capacidad por debajo de la cantidad de vehículos actualmente estacionados.</p>
-                                    </div>
+
+                        <div class="panel">
+                            <div class="panel-header">
+                                <div>
+                                    <h3 class="panel-title">Tarifa rápida</h3>
+                                    <p class="panel-subtitle">Simule un cobro antes de registrar.</p>
                                 </div>
                             </div>
-                            
-                            <hr class="border-slate-50">
-                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="form-label" for="quote-type">Tipo</label>
+                                    <select id="quote-type" class="form-control" onchange="renderQuickQuote()"></select>
+                                </div>
+                                <div>
+                                    <label class="form-label" for="quote-minutes">Minutos</label>
+                                    <input type="number" id="quote-minutes" class="form-control" value="60" min="1" oninput="renderQuickQuote()">
+                                </div>
+                                <div class="summary-row">
+                                    <span>Importe estimado</span>
+                                    <strong id="quote-amount">S/ 0.00</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tab-map" class="tab-content hidden space-y-6">
+                    <div class="panel">
+                        <div class="panel-header">
                             <div>
-                                <h4 class="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-8 px-2">Tarifas por Tipo de Vehículo (S/ por hr)</h4>
-                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-6">
-                                    <div class="input-group">
-                                        <p class="type-label">Auto</p>
-                                        <input type="number" step="0.5" id="rate-auto" value="2.0" class="rate-input">
-                                    </div>
-                                    <div class="input-group">
-                                        <p class="type-label">Moto</p>
-                                        <input type="number" step="0.5" id="rate-moto" value="1.0" class="rate-input">
-                                    </div>
-                                    <div class="input-group">
-                                        <p class="type-label">SUV</p>
-                                        <input type="number" step="0.5" id="rate-truck" value="3.5" class="rate-input">
-                                    </div>
-                                    <div class="input-group">
-                                        <p class="type-label">Bus</p>
-                                        <input type="number" step="0.5" id="rate-bus" value="5.0" class="rate-input">
-                                    </div>
-                                </div>
+                                <h3 class="panel-title">Mapa de espacios</h3>
+                                <p class="panel-subtitle">Haga clic en un espacio ocupado para cobrar, o en uno libre para registrar.</p>
                             </div>
-
-                            <button onclick="updateSettings()" class="w-full py-5 bg-slate-900 text-white rounded-[2rem] font-black text-lg hover:bg-indigo-600 transition-all transform hover:scale-[1.02] active:scale-95 shadow-xl shadow-slate-100">
-                                Guardar Configuración
-                            </button>
+                            <div class="legend">
+                                <span><b class="legend-free"></b>Libre</span>
+                                <span><b class="legend-busy"></b>Ocupado</span>
+                            </div>
                         </div>
+                        <div id="parking-grid" class="parking-grid"></div>
                     </div>
-                </div>
+                </section>
 
-                <!-- TAB: SUPER ADMIN -->
-                <div id="tab-superadmin" class="tab-content hidden opacity-0 scale-95 space-y-8">
-                    <div class="bg-indigo-900 border border-indigo-800 rounded-[3rem] p-10 text-white relative overflow-hidden shadow-2xl">
-                        <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-indigo-500/20 blur-3xl rounded-full"></div>
-                        <div class="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+                <section id="tab-history" class="tab-content hidden space-y-6">
+                    <div class="panel">
+                        <div class="panel-header">
                             <div>
-                                <div class="flex items-center gap-3 mb-2">
-                                    <i data-lucide="shield-check" class="w-8 h-8 text-indigo-400"></i>
-                                    <h2 class="text-3xl font-black tracking-tighter">Panel Maestro SaaS</h2>
-                                </div>
-                                <p class="text-indigo-200 font-medium">Gestión administrativa global de cuentas y suscripciones de ParkMaster Pro.</p>
+                                <h3 class="panel-title">Historial y arqueo</h3>
+                                <p class="panel-subtitle">Filtre, exporte CSV/PDF y cierre el día con evidencia.</p>
                             </div>
-                            <button onclick="window.fbLogout()" class="px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-colors backdrop-blur-sm border border-white/20">
-                                Cerrar Sesión
+                            <div class="toolbar">
+                                <button onclick="exportHistoryCsv()" class="btn btn-secondary">
+                                    <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+                                    CSV
+                                </button>
+                                <button onclick="downloadDailyReport()" class="btn btn-primary">
+                                    <i data-lucide="file-down" class="w-4 h-4"></i>
+                                    PDF
+                                </button>
+                                <button onclick="clearHistory()" class="btn btn-danger-soft">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    Reiniciar día
+                                </button>
+                            </div>
+                        </div>
+                        <div class="filters-grid">
+                            <div>
+                                <label class="form-label" for="filter-date-from">Desde</label>
+                                <input type="date" id="filter-date-from" class="form-control compact" onchange="renderHistory()">
+                            </div>
+                            <div>
+                                <label class="form-label" for="filter-date-to">Hasta</label>
+                                <input type="date" id="filter-date-to" class="form-control compact" onchange="renderHistory()">
+                            </div>
+                            <div>
+                                <label class="form-label" for="filter-payment">Pago</label>
+                                <select id="filter-payment" class="form-control compact" onchange="renderHistory()">
+                                    <option value="">Todos</option>
+                                    <option value="cash">Efectivo</option>
+                                    <option value="yape">Yape</option>
+                                    <option value="plin">Plin</option>
+                                    <option value="card">Tarjeta</option>
+                                    <option value="transfer">Transferencia</option>
+                                    <option value="courtesy">Cortesía</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="form-label" for="filter-query">Buscar</label>
+                                <input type="text" id="filter-query" class="form-control compact" placeholder="Placa, cliente, ticket..." oninput="renderHistory()">
+                            </div>
+                        </div>
+                        <div class="history-summary">
+                            <div><span>Total</span><strong id="history-total">S/ 0.00</strong></div>
+                            <div><span>Operaciones</span><strong id="history-count">0</strong></div>
+                            <div><span>Promedio</span><strong id="history-average">S/ 0.00</strong></div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="data-table" aria-label="Historial de transacciones">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Ticket</th>
+                                        <th scope="col">Vehículo</th>
+                                        <th scope="col">Intervalo</th>
+                                        <th scope="col">Duración</th>
+                                        <th scope="col">Pago</th>
+                                        <th scope="col" class="text-right">Monto</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="history-body"></tbody>
+                            </table>
+                        </div>
+                        <div id="no-history" class="empty-state hidden">
+                            <i data-lucide="history" class="w-10 h-10 text-slate-300"></i>
+                            <p>No hay transacciones para el filtro seleccionado.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tab-cash" class="tab-content hidden space-y-6">
+                    <div class="grid xl:grid-cols-[380px_1fr] gap-6">
+                        <div class="panel">
+                            <div class="panel-header">
+                                <div>
+                                    <h3 class="panel-title">Turno de caja</h3>
+                                    <p class="panel-subtitle">Apertura, cierre y diferencias.</p>
+                                </div>
+                            </div>
+                            <div id="cash-status-card" class="status-box"></div>
+                            <div class="grid grid-cols-2 gap-3 mt-4">
+                                <div>
+                                    <label class="form-label" for="cash-cashier">Cajero</label>
+                                    <input type="text" id="cash-cashier" class="form-control compact" placeholder="Nombre">
+                                </div>
+                                <div>
+                                    <label class="form-label" for="cash-opening">Fondo inicial</label>
+                                    <input type="number" id="cash-opening" class="form-control compact" value="0" min="0" step="0.1">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3 mt-4">
+                                <button onclick="openShift()" class="btn btn-primary justify-center">
+                                    <i data-lucide="unlock" class="w-4 h-4"></i>
+                                    Abrir
+                                </button>
+                                <button onclick="closeShift()" class="btn btn-secondary justify-center">
+                                    <i data-lucide="lock" class="w-4 h-4"></i>
+                                    Cerrar
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <div class="panel-header">
+                                <div>
+                                    <h3 class="panel-title">Movimientos manuales</h3>
+                                    <p class="panel-subtitle">Gastos, ingresos externos y ajustes de caja.</p>
+                                </div>
+                            </div>
+                            <form id="cash-movement-form" class="grid md:grid-cols-[140px_1fr_130px_150px] gap-3">
+                                <div>
+                                    <label class="form-label sr-only" for="movement-type">Tipo de movimiento</label>
+                                    <select id="movement-type" class="form-control compact">
+                                        <option value="income">Ingreso</option>
+                                        <option value="expense">Gasto</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="form-label sr-only" for="movement-concept">Concepto</label>
+                                    <input type="text" id="movement-concept" class="form-control compact" placeholder="Concepto">
+                                </div>
+                                <div>
+                                    <label class="form-label sr-only" for="movement-amount">Monto</label>
+                                    <input type="number" id="movement-amount" class="form-control compact" min="0" step="0.1" placeholder="Monto">
+                                </div>
+                                <button type="submit" class="btn btn-secondary justify-center">
+                                    <i data-lucide="plus" class="w-4 h-4"></i>
+                                    Agregar
+                                </button>
+                            </form>
+                            <div class="mt-5 overflow-x-auto">
+                                <table class="data-table" aria-label="Movimientos manuales de caja">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Hora</th>
+                                            <th scope="col">Tipo</th>
+                                            <th scope="col">Concepto</th>
+                                            <th scope="col" class="text-right">Monto</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="movement-list"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tab-settings" class="tab-content hidden space-y-6">
+                    <div class="grid xl:grid-cols-2 gap-6">
+                        <div class="panel">
+                            <div class="panel-header">
+                                <div>
+                                    <h3 class="panel-title">Datos del negocio</h3>
+                                    <p class="panel-subtitle">Aparecen en tickets, reportes y respaldos.</p>
+                                </div>
+                            </div>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="form-label" for="set-company">Nombre comercial</label>
+                                    <input type="text" id="set-company" class="form-control">
+                                </div>
+                                <div>
+                                    <label class="form-label" for="set-ruc">RUC / Documento</label>
+                                    <input type="text" id="set-ruc" class="form-control">
+                                </div>
+                                <div>
+                                    <label class="form-label" for="set-phone">Teléfono</label>
+                                    <input type="text" id="set-phone" class="form-control">
+                                </div>
+                                <div>
+                                    <label class="form-label" for="set-currency">Moneda</label>
+                                    <input type="text" id="set-currency" class="form-control" maxlength="4">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="form-label" for="set-address">Dirección</label>
+                                    <input type="text" id="set-address" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <div class="panel-header">
+                                <div>
+                                    <h3 class="panel-title">Reglas operativas</h3>
+                                    <p class="panel-subtitle">Capacidad, tolerancia, redondeo y penalidades.</p>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="form-label" for="set-slots">Capacidad</label>
+                                    <input type="number" id="set-slots" class="form-control" min="1">
+                                </div>
+                                <div>
+                                    <label class="form-label" for="set-grace">Gracia min.</label>
+                                    <input type="number" id="set-grace" class="form-control" min="0">
+                                </div>
+                                <div>
+                                    <label class="form-label" for="set-increment">Bloque min.</label>
+                                    <input type="number" id="set-increment" class="form-control" min="1">
+                                </div>
+                                <div>
+                                    <label class="form-label" for="set-minimum">Mínimo min.</label>
+                                    <input type="number" id="set-minimum" class="form-control" min="1">
+                                </div>
+                                <div>
+                                    <label class="form-label" for="set-lost">Ticket perdido</label>
+                                    <input type="number" id="set-lost" class="form-control" min="0" step="0.1">
+                                </div>
+                                <div>
+                                    <label class="form-label" for="set-overnight">Recargo noche</label>
+                                    <input type="number" id="set-overnight" class="form-control" min="0" step="0.1">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <h3 class="panel-title">Tarifas por vehículo</h3>
+                                <p class="panel-subtitle">Precio por hora. Puede desactivar tipos que no use.</p>
+                            </div>
+                            <button onclick="updateSettings()" class="btn btn-primary">
+                                <i data-lucide="save" class="w-4 h-4"></i>
+                                Guardar configuración
+                            </button>
+                        </div>
+                        <div class="rate-grid">
+                            <label class="rate-card"><span>Auto</span><input type="number" step="0.1" id="rate-auto"></label>
+                            <label class="rate-card"><span>Moto</span><input type="number" step="0.1" id="rate-moto"></label>
+                            <label class="rate-card"><span>SUV / Pickup</span><input type="number" step="0.1" id="rate-truck"></label>
+                            <label class="rate-card"><span>Bus</span><input type="number" step="0.1" id="rate-bus"></label>
+                            <label class="rate-card"><span>Bicicleta</span><input type="number" step="0.1" id="rate-bicycle"></label>
+                            <label class="rate-card"><span>Carga</span><input type="number" step="0.1" id="rate-cargo"></label>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <h3 class="panel-title">Datos y respaldo</h3>
+                                <p class="panel-subtitle">Exporta, importa o limpia la información local del navegador.</p>
+                            </div>
+                            <div class="toolbar">
+                                <button onclick="exportBackup()" class="btn btn-secondary">
+                                    <i data-lucide="download" class="w-4 h-4"></i>
+                                    Exportar respaldo
+                                </button>
+                                <button onclick="document.getElementById('backup-file').click()" class="btn btn-secondary">
+                                    <i data-lucide="upload" class="w-4 h-4"></i>
+                                    Importar
+                                </button>
+                                <button onclick="clearAllData()" class="btn btn-danger-soft">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    Borrar todo
+                                </button>
+                                <input type="file" id="backup-file" accept="application/json" class="hidden">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tab-superadmin" class="tab-content hidden space-y-6">
+                    <div class="panel bg-indigo-950 text-white border-indigo-900">
+                        <div class="panel-header border-indigo-900">
+                            <div>
+                                <h3 class="text-xl font-black tracking-tight flex items-center gap-2">
+                                    <i data-lucide="shield-check" class="w-5 h-5 text-indigo-300"></i>
+                                    Panel Maestro SaaS
+                                </h3>
+                                <p class="text-sm text-indigo-200 font-medium mt-1">Administración básica de cuentas y licencias.</p>
+                            </div>
+                            <button onclick="window.fbLogout()" class="btn bg-white/10 hover:bg-white/20 text-white border border-white/20">
+                                <i data-lucide="log-out" class="w-4 h-4"></i>
+                                Cerrar sesión
                             </button>
                         </div>
                     </div>
-                    
-                    <!-- NEW: CLIENT CREATION TOOL -->
-                    <div class="bg-indigo-50/50 rounded-[2.5rem] border border-indigo-100 p-8">
-                        <h3 class="text-lg font-black text-indigo-900 mb-4 tracking-tighter flex items-center gap-2">
-                            <i data-lucide="user-plus" class="w-5 h-5"></i> Crear Nuevo Cliente / Franquicia
-                        </h3>
-                        <form id="form-create-client" class="flex flex-col md:flex-row gap-4" onsubmit="window.createSaaSClient(event)">
-                            <div class="flex-1">
-                                <input type="email" id="new-client-email" required placeholder="correo@cliente.com" class="w-full px-5 py-4 bg-white border border-indigo-200 rounded-2xl text-sm font-bold focus:border-indigo-400 focus:outline-none focus:ring-4 focus:ring-indigo-100 transition-all text-slate-800">
+
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <h3 class="panel-title">Crear cliente</h3>
+                                <p class="panel-subtitle">Alta manual de una cuenta con periodo de prueba.</p>
                             </div>
-                            <div class="flex-1">
-                                <input type="password" id="new-client-pwd" required placeholder="Clave temporal (mín 6)" class="w-full px-5 py-4 bg-white border border-indigo-200 rounded-2xl text-sm font-bold focus:border-indigo-400 focus:outline-none focus:ring-4 focus:ring-indigo-100 transition-all text-slate-800" minlength="6">
+                        </div>
+                        <form id="form-create-client" class="grid md:grid-cols-[1fr_1fr_160px] gap-3" onsubmit="window.createSaaSClient(event)">
+                            <div>
+                                <label class="form-label sr-only" for="new-client-email">Correo del cliente</label>
+                                <input type="email" id="new-client-email" required placeholder="correo@cliente.com" class="form-control" autocomplete="off">
                             </div>
-                            <button type="submit" id="btn-create-client" class="px-8 py-4 bg-indigo-600 hover:bg-slate-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest transition-all shadow-xl shadow-indigo-200">
-                                Registrar
-                            </button>
+                            <div>
+                                <label class="form-label sr-only" for="new-client-pwd">Clave temporal</label>
+                                <input type="password" id="new-client-pwd" required placeholder="Clave temporal, mín. 6" class="form-control" minlength="6" autocomplete="new-password">
+                            </div>
+                            <button type="submit" id="btn-create-client" class="btn btn-primary justify-center">Registrar</button>
                         </form>
                     </div>
 
-                    <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden p-8">
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-xl font-black text-slate-800">Clientes Registrados</h3>
-                            <button onclick="loadSaaSUsers()" class="p-3 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-xl transition-colors">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <h3 class="panel-title">Clientes registrados</h3>
+                                <p class="panel-subtitle">Licencias, estado de prueba y cobros.</p>
+                            </div>
+                            <button onclick="loadSaaSUsers()" class="icon-button" title="Actualizar" aria-label="Actualizar lista de clientes">
                                 <i data-lucide="refresh-cw" class="w-5 h-5"></i>
                             </button>
                         </div>
                         <div class="overflow-x-auto">
-                            <table class="w-full text-left border-collapse">
+                            <table class="data-table" aria-label="Clientes registrados">
                                 <thead>
-                                    <tr class="border-b border-slate-100 text-[10px] font-black tracking-widest text-slate-400 uppercase">
-                                        <th class="py-4 pl-4">Cliente (Email)</th>
-                                        <th class="py-4">Registro</th>
-                                        <th class="py-4">Estado</th>
-                                        <th class="py-4 text-right pr-4">Acción</th>
+                                    <tr>
+                                        <th scope="col">Cliente</th>
+                                        <th scope="col">Registro</th>
+                                        <th scope="col">Estado</th>
+                                        <th scope="col" class="text-right">Acción</th>
                                     </tr>
                                 </thead>
-                                <tbody id="admin-users-list" class="text-sm font-medium text-slate-600">
-                                    <tr>
-                                        <td colspan="4" class="py-10 text-center text-slate-400">Cargando cuentas...</td>
-                                    </tr>
+                                <tbody id="admin-users-list">
+                                    <tr><td colspan="4" class="py-8 text-center text-slate-500">Cargando cuentas...</td></tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                </div>
+                </section>
             </div>
-            
-            <footer class="mt-auto py-6 px-10 text-center border-t border-slate-100/50 bg-white/30 backdrop-blur-sm">
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">
-                    Sistema Desarrollado por <span class="text-indigo-600">ING. ARNOLD CODE </span>
-                </p>
-            </footer>
         </main>
     </div>
 
-    <!-- MODAL: INGRESO -->
-    <div id="modal-entry" class="modal-overlay hidden">
-        <div class="modal-card animate-modal-in">
-            <div class="p-10 flex justify-between items-center bg-slate-50/50 rounded-t-[3.5rem] border-b border-white">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-indigo-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-100">
-                        <i data-lucide="plus"></i>
-                    </div>
-                    <h3 class="text-2xl font-black text-slate-900 tracking-tight">Nuevo Ingreso</h3>
+    <div id="modal-entry" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-entry-title">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div>
+                    <h3 id="modal-entry-title" class="modal-title">Nuevo ingreso</h3>
+                    <p class="modal-subtitle">Registre vehículo, espacio y datos opcionales.</p>
                 </div>
-                <button onclick="closeModals()" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-100 rounded-full text-slate-400 hover:text-slate-900 transition-all">
+                <button onclick="closeModals()" class="icon-button" title="Cerrar" aria-label="Cerrar">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
-            <form id="form-entry" class="p-10 space-y-8">
+            <form id="form-entry" class="modal-body space-y-4">
                 <div>
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 block px-2">Número de Placa</label>
-                    <input type="text" id="in-plate" required placeholder="XYZ-987" class="w-full px-8 py-6 bg-slate-50 border-3 border-transparent rounded-[2.5rem] focus:bg-white focus:border-indigo-100 focus:outline-none text-4xl font-black uppercase tracking-tighter transition-all placeholder:opacity-20">
+                    <label class="form-label" for="in-plate">Número de placa</label>
+                    <input type="text" id="in-plate" required placeholder="XYZ-987" class="form-control text-2xl font-black uppercase" aria-describedby="in-plate-error">
+                    <p id="in-plate-error" class="field-error hidden" role="alert"></p>
                 </div>
-                <div class="grid grid-cols-2 gap-6">
+                <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 block px-2">Categoría</label>
-                        <select id="in-type" class="w-full px-8 py-5 bg-slate-50 border-3 border-transparent rounded-[2.5rem] focus:border-indigo-100 focus:outline-none font-black text-lg appearance-none cursor-pointer">
-                            <option value="auto">🚙 AUTO</option>
-                            <option value="moto">🏍️ MOTO</option>
-                            <option value="camioneta">🚚 SUV / PICKUP</option>
-                            <option value="autobus">🚌 AUTOBÚS</option>
-                        </select>
+                        <label class="form-label" for="in-type">Categoría</label>
+                        <select id="in-type" class="form-control"></select>
                     </div>
                     <div>
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 block px-2">Espacio Asignado</label>
-                        <input type="number" id="in-slot" readonly class="w-full px-8 py-5 bg-indigo-50 border-3 border-indigo-100 rounded-[2.5rem] font-black text-indigo-600 text-lg">
+                        <label class="form-label" for="in-slot">Espacio</label>
+                        <select id="in-slot" class="form-control"></select>
                     </div>
                 </div>
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-slate-900 text-white font-black py-6 rounded-[2.5rem] transition-all transform hover:scale-[1.02] shadow-2xl shadow-indigo-100 text-xl tracking-tight">
-                    Confirmar Registro
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="form-label" for="in-customer">Cliente</label>
+                        <input type="text" id="in-customer" class="form-control" placeholder="Opcional">
+                    </div>
+                    <div>
+                        <label class="form-label" for="in-phone">Teléfono</label>
+                        <input type="tel" id="in-phone" class="form-control" placeholder="Opcional">
+                    </div>
+                </div>
+                <div>
+                    <label class="form-label" for="in-notes">Notas</label>
+                    <textarea id="in-notes" class="form-control min-h-[76px]" placeholder="Observaciones opcionales"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary w-full justify-center">
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                    Confirmar registro
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- MODAL: COBRO (CHECKOUT) -->
-    <div id="modal-checkout" class="modal-overlay hidden">
-        <div class="modal-card max-w-sm animate-modal-in p-12 text-center">
-            <div class="w-24 h-24 bg-emerald-50 text-emerald-600 rounded-[2.5rem] flex items-center justify-center mx-auto mb-8 animate-bounce-slow">
-                <i data-lucide="receipt-text" class="w-12 h-12"></i>
-            </div>
-            <h3 class="text-4xl font-black text-slate-900 mb-2 tracking-tighter" id="out-plate">---</h3>
-            <p id="out-details" class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-10"></p>
-            
-            <div class="receipt-card p-10 mb-10 text-center">
-                <p class="text-[10px] font-black text-indigo-300 uppercase tracking-widest mb-1">Costo de Estancia</p>
-                <div class="text-6xl font-black text-indigo-900 tracking-tighter" id="out-amount">S/ 0.00</div>
-                <div id="time-badge" class="mt-4 text-[10px] inline-block bg-white text-indigo-400 px-3 py-1 rounded-full border border-indigo-50 font-bold uppercase">Calibrado por segundos</div>
-            </div>
-
-            <div class="flex flex-col gap-4">
-                <button id="btn-pay" class="w-full bg-slate-900 hover:bg-emerald-600 text-white py-6 rounded-[2rem] font-black text-xl transition-all shadow-xl shadow-slate-100">
-                    Procesar Pago
+    <div id="modal-checkout" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-checkout-title">
+        <div class="modal-card max-w-xl">
+            <div class="modal-header">
+                <div>
+                    <h3 id="modal-checkout-title" class="modal-title">---</h3>
+                    <p id="out-details" class="modal-subtitle"></p>
+                </div>
+                <button onclick="closeModals()" class="icon-button" title="Cerrar" aria-label="Cerrar">
+                    <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
-                <button onclick="closeModals()" class="w-full py-2 text-slate-300 font-bold hover:text-slate-600 transition-all text-sm uppercase tracking-widest">
-                    Cancelar
+            </div>
+            <div class="modal-body space-y-5">
+                <div class="receipt-card">
+                    <p class="text-xs font-black text-slate-500 uppercase tracking-widest">Costo de estancia</p>
+                    <div class="text-5xl font-black text-slate-900 tracking-tight" id="out-amount">S/ 0.00</div>
+                    <div id="time-badge" class="text-xs font-bold text-slate-500 mt-2">Calculando...</div>
+                </div>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="form-label" for="out-payment-method">Medio de pago</label>
+                        <select id="out-payment-method" class="form-control">
+                            <option value="cash">Efectivo</option>
+                            <option value="yape">Yape</option>
+                            <option value="plin">Plin</option>
+                            <option value="card">Tarjeta</option>
+                            <option value="transfer">Transferencia</option>
+                            <option value="courtesy">Cortesía</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label" for="out-discount">Descuento</label>
+                        <input type="number" id="out-discount" class="form-control" value="0" min="0" step="0.1">
+                    </div>
+                    <div>
+                        <label class="form-label" for="out-extra">Cargo adicional</label>
+                        <input type="number" id="out-extra" class="form-control" value="0" min="0" step="0.1">
+                    </div>
+                    <label class="checkbox-card">
+                        <input type="checkbox" id="out-lost-ticket">
+                        <span>Ticket perdido</span>
+                    </label>
+                </div>
+                <button id="btn-pay" class="btn btn-primary w-full justify-center text-base">
+                    <i data-lucide="credit-card" class="w-5 h-5"></i>
+                    Procesar pago y liberar espacio
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Feedback -->
-    <div id="toast" class="toast-hidden">
+    <div id="toast" class="toast-hidden" role="status" aria-live="polite">
         <i data-lucide="check-circle-2" class="w-5 h-5 toast-icon"></i>
         <span id="toast-msg">Mensaje del sistema</span>
+        <button id="toast-action" type="button" class="toast-action hidden"></button>
     </div>
 
-    <!-- Hidden Template for PDF -->
-    <div id="pdf-report-template" style="position: absolute; left: -9999px; top: -9999px;">
-        <!-- This will be populated dynamically -->
-    </div>
+    <div id="pdf-report-template" class="hidden"></div>
 
-    <script src="app.js"></script>
+    <script type="module" src="app.js"></script>
     <script type="module" src="auth.js"></script>
 </body>
 </html>
