@@ -1,0 +1,90 @@
+[
+  {
+    "url": "https://garaje-26c50.web.app/",
+    "sameHost": true,
+    "saved": true,
+    "path": "index.html",
+    "type": "text/html; charset=utf-8",
+    "error": null
+  },
+  {
+    "url": "https://cdn.tailwindcss.com/",
+    "sameHost": false,
+    "saved": false,
+    "path": null,
+    "type": null,
+    "error": null
+  },
+  {
+    "url": "https://unpkg.com/lucide@latest",
+    "sameHost": false,
+    "saved": false,
+    "path": null,
+    "type": null,
+    "error": null
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
+    "sameHost": false,
+    "saved": false,
+    "path": null,
+    "type": null,
+    "error": null
+  },
+  {
+    "url": "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js",
+    "sameHost": false,
+    "saved": false,
+    "path": null,
+    "type": null,
+    "error": null
+  },
+  {
+    "url": "https://garaje-26c50.web.app/style.css",
+    "sameHost": true,
+    "saved": true,
+    "path": "style.css",
+    "type": "text/css; charset=utf-8",
+    "error": null
+  },
+  {
+    "url": "https://fonts.googleapis.com/",
+    "sameHost": false,
+    "saved": false,
+    "path": null,
+    "type": null,
+    "error": null
+  },
+  {
+    "url": "https://fonts.gstatic.com/",
+    "sameHost": false,
+    "saved": false,
+    "path": null,
+    "type": null,
+    "error": null
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap",
+    "sameHost": false,
+    "saved": false,
+    "path": null,
+    "type": null,
+    "error": null
+  },
+  {
+    "url": "https://garaje-26c50.web.app/app.js",
+    "sameHost": true,
+    "saved": true,
+    "path": "app.js",
+    "type": "text/javascript; charset=utf-8",
+    "error": null
+  },
+  {
+    "url": "https://garaje-26c50.web.app/auth.js",
+    "sameHost": true,
+    "saved": true,
+    "path": "auth.js",
+    "type": "text/javascript; charset=utf-8",
+    "error": null
+  }
+]
