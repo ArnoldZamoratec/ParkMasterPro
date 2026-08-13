@@ -1,4 +1,4 @@
-import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+﻿import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
@@ -83,7 +83,7 @@ onAuthStateChanged(auth, async (user) => {
                 const statusEl = document.getElementById('sidebar-trial-status');
                 if (statusEl) {
                     statusEl.textContent = "ADMINISTRADOR DEL SISTEMA";
-                    statusEl.className = "text-[11px] font-black tracking-widest uppercase text-indigo-600";
+                    statusEl.className = "text-xs font-black tracking-widest uppercase text-emerald-700";
                 }
                 
                 // Allow them to start in the dashboard, but they can now see the SaaS tab
@@ -110,12 +110,12 @@ onAuthStateChanged(auth, async (user) => {
                     const statusEl = document.getElementById('sidebar-trial-status');
                     if (statusEl) {
                         if (userData.isPaid) {
-                            statusEl.innerHTML = '<span aria-hidden="true">👑 </span>LICENCIA PRO ACTIVA';
-                            statusEl.className = "text-[11px] font-black tracking-widest uppercase text-emerald-700";
+                            statusEl.innerHTML = '<span aria-hidden="true">ðŸ‘‘ </span>LICENCIA PRO ACTIVA';
+                            statusEl.className = "text-xs font-black tracking-widest uppercase text-emerald-700";
                         } else {
                             const daysLeft = Math.max(0, 30 - daysPassed);
-                            statusEl.innerHTML = `<span aria-hidden="true">⏳ </span>PRUEBA: QUEDAN ${daysLeft} DÍAS`;
-                            statusEl.className = "text-[11px] font-black tracking-widest uppercase " + (daysLeft <= 5 ? "text-red-600" : "text-amber-700");
+                            statusEl.innerHTML = `<span aria-hidden="true">â³ </span>PRUEBA: QUEDAN ${daysLeft} DÃAS`;
+                            statusEl.className = "text-xs font-black tracking-widest uppercase " + (daysLeft <= 5 ? "text-red-600" : "text-amber-700");
                         }
                     }
                 }
@@ -124,7 +124,7 @@ onAuthStateChanged(auth, async (user) => {
             console.error("Error accessing Firestore:", error);
             await alertDialog({
                 title: 'No se pudo verificar su licencia',
-                message: 'No se pudo conectar con el servicio de licencias. Verifique su conexión a internet o contacte a Soporte.'
+                message: 'No se pudo conectar con el servicio de licencias. Verifique su conexiÃ³n a internet o contacte a Soporte.'
             });
             authScreen.classList.remove('hidden');
             appShell.classList.add('hidden');
@@ -138,7 +138,7 @@ onAuthStateChanged(auth, async (user) => {
         paymentBlock.classList.remove('flex');
         
         if (btnLogin) {
-            btnLogin.innerHTML = 'Iniciar Sesión';
+            btnLogin.innerHTML = 'Iniciar SesiÃ³n';
             btnLogin.disabled = false;
         }
     }
@@ -171,7 +171,7 @@ authForm.addEventListener('submit', async (e) => {
         console.error("Auth Error:", err);
         authError.textContent = "Credenciales incorrectas o cuenta no autorizada. Contacte a Soporte.";
         authError.classList.remove('hidden');
-        btnLogin.innerHTML = 'Iniciar Sesión';
+        btnLogin.innerHTML = 'Iniciar SesiÃ³n';
         btnLogin.disabled = false;
     }
 });
@@ -188,7 +188,7 @@ window.createSaaSClient = async (e) => {
     
     const ok = await confirmDialog({
         title: 'Registrar cliente',
-        message: `¿Desea registrar de forma oficial a ${email} y darle 30 días de prueba?`,
+        message: `Â¿Desea registrar de forma oficial a ${email} y darle 30 dÃ­as de prueba?`,
         confirmLabel: 'Registrar',
         cancelLabel: 'Cancelar'
     });
@@ -256,7 +256,7 @@ window.loadSaaSUsers = async () => {
         listBody.innerHTML = '';
         
         if (snapshot.empty) {
-            listBody.innerHTML = '<tr><td colspan="4" class="py-10 text-center text-slate-500">No hay clientes aún.</td></tr>';
+            listBody.innerHTML = '<tr><td colspan="4" class="py-10 text-center text-slate-500">No hay clientes aÃºn.</td></tr>';
             return;
         }
         
@@ -278,11 +278,11 @@ window.loadSaaSUsers = async () => {
             
             let statusBadge = '';
             if (data.isPaid) {
-                statusBadge = `<span class="bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-full text-[11px] font-black uppercase tracking-widest border border-emerald-300"><span aria-hidden="true">💎 </span>Pago Recibido</span>`;
+                statusBadge = `<span class="bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-widest border border-emerald-300"><span aria-hidden="true">ðŸ’Ž </span>Pago Recibido</span>`;
             } else if (isBlocked) {
-                statusBadge = `<span class="bg-red-100 text-red-700 px-3 py-1.5 rounded-full text-[11px] font-black uppercase tracking-widest border border-red-300"><span aria-hidden="true">❌ </span>Bloqueado</span>`;
+                statusBadge = `<span class="bg-red-100 text-red-700 px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-widest border border-red-300"><span aria-hidden="true">âŒ </span>Bloqueado</span>`;
             } else {
-                statusBadge = `<span class="bg-amber-100 text-amber-800 px-3 py-1.5 rounded-full text-[11px] font-black uppercase tracking-widest border border-amber-300"><span aria-hidden="true">⏳ </span>30 Días (Faltan ${daysLeft})</span>`;
+                statusBadge = `<span class="bg-amber-100 text-amber-800 px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-widest border border-amber-300"><span aria-hidden="true">â³ </span>30 DÃ­as (Faltan ${daysLeft})</span>`;
             }
                     
             let actionBtn = '';
@@ -297,7 +297,7 @@ window.loadSaaSUsers = async () => {
             listBody.innerHTML += `
                 <tr class="border-b border-slate-50 hover:bg-slate-50/50 transition-colors group">
                     <td class="py-5 pl-4 flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-black text-xs">${escapeHtml((emailText.charAt(0) || '?').toUpperCase())}</div>
+                        <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center font-black text-xs">${escapeHtml((emailText.charAt(0) || '?').toUpperCase())}</div>
                         <span class="font-bold text-slate-700">${safeEmail}</span>
                     </td>
                     <td class="py-5 text-xs font-bold text-slate-500 uppercase tracking-wider">${dateStr}</td>
@@ -314,8 +314,8 @@ window.loadSaaSUsers = async () => {
 window.approvePayment = async (userId, email) => {
     const ok = await confirmDialog({
         title: 'Confirmar cobro',
-        message: `¿Confirma que ${email} ha pagado? Al aceptar, su sistema se desbloqueará de forma permanente.`,
-        confirmLabel: 'Sí, cobrado',
+        message: `Â¿Confirma que ${email} ha pagado? Al aceptar, su sistema se desbloquearÃ¡ de forma permanente.`,
+        confirmLabel: 'SÃ­, cobrado',
         cancelLabel: 'Cancelar'
     });
     if (!ok) return;
@@ -331,7 +331,7 @@ window.approvePayment = async (userId, email) => {
 window.revokePayment = async (userId, email) => {
     const ok = await confirmDialog({
         title: 'Revocar licencia',
-        message: `¿Está seguro de revocar la licencia de ${email}? Si tiene más de 30 días, su pantalla se bloqueará inmediatamente.`,
+        message: `Â¿EstÃ¡ seguro de revocar la licencia de ${email}? Si tiene mÃ¡s de 30 dÃ­as, su pantalla se bloquearÃ¡ inmediatamente.`,
         confirmLabel: 'Revocar',
         cancelLabel: 'Cancelar',
         destructive: true

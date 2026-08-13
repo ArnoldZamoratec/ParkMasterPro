@@ -1,4 +1,4 @@
-import { PAYMENT_LABELS, TYPE_META } from '../shared/constants.js';
+﻿import { PAYMENT_LABELS, TYPE_META } from '../shared/constants.js';
 import {
     cycleFocus,
     escapeAttr,
@@ -124,7 +124,7 @@ export class ParkingView {
                         <div class="text-xs text-slate-500 font-black uppercase">${escapeHtml(vehicle.ticketId)}</div>
                     </td>
                     <td>${escapeHtml(getTypeLabel(vehicle.type))}</td>
-                    <td><span class="font-black text-indigo-700">#${Number(vehicle.slot)}</span></td>
+                    <td><span class="font-black text-emerald-700">#${Number(vehicle.slot)}</span></td>
                     <td>
                         <div>${formatTime(vehicle.entryTime)}</div>
                         <div class="text-xs text-slate-500">${minutesBetween(vehicle.entryTime, new Date())} min</div>
@@ -160,7 +160,7 @@ export class ParkingView {
 
         const { shift } = this.store.getState();
         setText('stat-shift', shift.isOpen ? 'Caja abierta' : 'Sin turno');
-        setText('stat-shift-detail', shift.isOpen ? `${shift.cashier || 'Cajero'} · ${formatTime(shift.openedAt)}` : 'Abra caja para auditoría');
+        setText('stat-shift-detail', shift.isOpen ? `${shift.cashier || 'Cajero'} Â· ${formatTime(shift.openedAt)}` : 'Abra caja para auditorÃ­a');
         setText('sidebar-company', config.companyName || 'Cochera');
         refreshIcons();
     }
@@ -209,10 +209,10 @@ export class ParkingView {
                     </td>
                     <td>
                         <div class="font-black text-slate-900">${escapeHtml(item.plate)}</div>
-                        <div class="text-xs text-slate-500">${escapeHtml(getTypeLabel(item.type))} · Espacio ${Number(item.slot)}</div>
+                        <div class="text-xs text-slate-500">${escapeHtml(getTypeLabel(item.type))} Â· Espacio ${Number(item.slot)}</div>
                     </td>
                     <td>
-                        <div>${formatTime(item.entryTime)} → ${formatTime(item.exitTime)}</div>
+                        <div>${formatTime(item.entryTime)} â†’ ${formatTime(item.exitTime)}</div>
                         <div class="text-xs text-slate-500">${escapeHtml(item.customerName || 'Sin cliente')}</div>
                     </td>
                     <td>${Number(item.duration) || 0} min</td>
@@ -243,16 +243,16 @@ export class ParkingView {
                 <div class="flex items-center justify-between gap-3">
                     <div>
                         <div class="text-sm font-black text-slate-900">${shift.isOpen ? 'Turno abierto' : 'Turno cerrado'}</div>
-                        <div class="text-xs text-slate-500 mt-1">${shift.isOpen ? `Desde ${formatTime(shift.openedAt)}` : 'Abra caja antes de operar caja física'}</div>
+                        <div class="text-xs text-slate-500 mt-1">${shift.isOpen ? `Desde ${formatTime(shift.openedAt)}` : 'Abra caja antes de operar caja fÃ­sica'}</div>
                     </div>
                     <span class="text-xs font-black uppercase ${shift.isOpen ? 'text-emerald-700' : 'text-slate-500'}">${shift.isOpen ? 'Activo' : 'Inactivo'}</span>
                 </div>
                 <div class="grid grid-cols-2 gap-3 mt-4 text-sm">
-                    <div><span class="block text-slate-500 font-black text-[11px] uppercase">Fondo</span><strong>${this.money(shift.openingCash || 0)}</strong></div>
-                    <div><span class="block text-slate-500 font-black text-[11px] uppercase">Parking</span><strong>${this.money(parkingTotal)}</strong></div>
-                    <div><span class="block text-slate-500 font-black text-[11px] uppercase">Ingresos</span><strong>${this.money(movementTotals.income)}</strong></div>
-                    <div><span class="block text-slate-500 font-black text-[11px] uppercase">Gastos</span><strong>${this.money(movementTotals.expense)}</strong></div>
-                    <div class="col-span-2"><span class="block text-slate-500 font-black text-[11px] uppercase">Caja esperada</span><strong class="text-lg">${this.money(expected)}</strong></div>
+                    <div><span class="block text-slate-600 font-black text-xs uppercase">Fondo</span><strong>${this.money(shift.openingCash || 0)}</strong></div>
+                    <div><span class="block text-slate-600 font-black text-xs uppercase">Parking</span><strong>${this.money(parkingTotal)}</strong></div>
+                    <div><span class="block text-slate-600 font-black text-xs uppercase">Ingresos</span><strong>${this.money(movementTotals.income)}</strong></div>
+                    <div><span class="block text-slate-600 font-black text-xs uppercase">Gastos</span><strong>${this.money(movementTotals.expense)}</strong></div>
+                    <div class="col-span-2"><span class="block text-slate-600 font-black text-xs uppercase">Caja esperada</span><strong class="text-lg">${this.money(expected)}</strong></div>
                 </div>
             `;
         }
@@ -290,9 +290,9 @@ export class ParkingView {
 
     renderCheckout(vehicle, quote) {
         setText('modal-checkout-title', vehicle.plate);
-        setText('out-details', `${getTypeLabel(vehicle.type)} · ${quote.duration} min · Espacio ${vehicle.slot} · Ticket ${vehicle.ticketId}`);
+        setText('out-details', `${getTypeLabel(vehicle.type)} Â· ${quote.duration} min Â· Espacio ${vehicle.slot} Â· Ticket ${vehicle.ticketId}`);
         setText('out-amount', this.money(quote.total));
-        setText('time-badge', `${quote.billableMinutes} min facturados · base ${this.money(quote.baseAmount)}`);
+        setText('time-badge', `${quote.billableMinutes} min facturados Â· base ${this.money(quote.baseAmount)}`);
     }
 
     openModal(id) {
@@ -403,7 +403,7 @@ export class ParkingView {
 
         const titles = {
             dashboard: 'Dashboard',
-            operations: 'Operación',
+            operations: 'OperaciÃ³n',
             map: 'Mapa de espacios',
             history: 'Historial y arqueo',
             cash: 'Caja',
@@ -593,6 +593,6 @@ export class ParkingView {
         }, {});
         return Object.entries(counts)
             .map(([method, count]) => `${PAYMENT_LABELS[method] || method}: ${count}`)
-            .join(' · ');
+            .join(' Â· ');
     }
 }

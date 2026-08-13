@@ -52,7 +52,7 @@ export class ReportService {
         const dateFrom = from || toDateInputValue(new Date());
         const dateTo = to || dateFrom;
 
-        doc.setFillColor(17, 24, 39);
+        doc.setFillColor(4, 120, 87);
         doc.rect(0, 0, 210, 32, 'F');
         doc.setTextColor(255, 255, 255);
         doc.setFont('helvetica', 'bold');
@@ -87,7 +87,7 @@ export class ReportService {
             head: [['Ticket', 'Placa', 'Tipo', 'Intervalo', 'Duración', 'Pago', 'Monto']],
             body,
             theme: 'striped',
-            headStyles: { fillColor: [79, 70, 229], textColor: [255, 255, 255], fontStyle: 'bold' },
+            headStyles: { fillColor: [4, 120, 87], textColor: [255, 255, 255], fontStyle: 'bold' },
             bodyStyles: { fontSize: 8 },
             columnStyles: { 6: { halign: 'right', fontStyle: 'bold' } },
             margin: { left: 14, right: 14 }

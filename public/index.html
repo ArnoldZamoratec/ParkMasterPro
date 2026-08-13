@@ -16,19 +16,19 @@
 </head>
 <body class="bg-slate-100 text-slate-900 font-['Plus_Jakarta_Sans']">
     <a href="#main-content" class="skip-link">Saltar al contenido</a>
-    <div id="auth-screen" class="fixed inset-0 bg-slate-950 z-[100] flex flex-col items-center justify-center p-6 transition-all duration-300">
-        <div class="w-full max-w-md bg-white p-8 rounded-xl shadow-2xl border border-slate-200">
-            <div class="flex items-center gap-4 mb-8">
-                <div class="w-12 h-12 bg-indigo-600 rounded-lg flex items-center justify-center text-white">
-                    <i data-lucide="parking-square" class="w-7 h-7"></i>
+    <div id="auth-screen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center p-6 transition-all duration-300 bg-gradient-to-br from-emerald-950 via-emerald-900 to-slate-950">
+        <div class="w-full max-w-md bg-white p-8 md:p-10 rounded-2xl shadow-2xl border border-slate-200">
+            <div class="flex flex-col items-center text-center gap-4 mb-8">
+                <div class="w-16 h-16 bg-emerald-700 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-700/30">
+                    <i data-lucide="parking-square" class="w-9 h-9"></i>
                 </div>
                 <div>
-                    <h1 class="text-2xl font-black tracking-tight">ParkMaster Pro</h1>
-                    <p class="text-sm text-slate-500 font-semibold">Acceso operativo</p>
+                    <h1 class="text-3xl font-black tracking-tight text-slate-900">ParkMaster Pro</h1>
+                    <p class="text-base text-slate-600 font-semibold mt-1">Acceso operativo del garaje</p>
                 </div>
             </div>
 
-            <form id="auth-form" class="space-y-4">
+            <form id="auth-form" class="space-y-5">
                 <div>
                     <label class="form-label" for="auth-email">Correo electrónico</label>
                     <input type="email" id="auth-email" required class="form-control" placeholder="admin@empresa.com" autocomplete="email">
@@ -37,14 +37,14 @@
                     <label class="form-label" for="auth-password">Contraseña</label>
                     <input type="password" id="auth-password" required class="form-control" placeholder="••••••••" autocomplete="current-password">
                 </div>
-                <button type="submit" id="btn-login" class="btn btn-primary w-full justify-center">
+                <button type="submit" id="btn-login" class="btn btn-primary w-full justify-center text-base">
                     Iniciar sesión
                 </button>
             </form>
 
-            <p id="auth-error" class="hidden mt-4 text-sm font-bold text-red-600 bg-red-50 py-3 px-4 rounded-lg border border-red-100" role="alert"></p>
+            <p id="auth-error" class="hidden mt-5 text-sm font-bold text-red-700 bg-red-50 py-3 px-4 rounded-lg border border-red-200" role="alert"></p>
         </div>
-        <p class="mt-6 text-slate-500 font-bold text-xs uppercase tracking-widest">ING. ARNOLD SOLUCIONES © 2026</p>
+        <p class="mt-6 text-emerald-200 font-bold text-xs uppercase tracking-widest">ING. ARNOLD SOLUCIONES © 2026</p>
     </div>
 
     <div id="payment-block" class="hidden fixed inset-0 bg-red-700 z-[90] flex-col items-center justify-center p-6 text-white">
@@ -70,7 +70,7 @@
             <div class="p-5 border-b border-slate-100">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
-                        <div class="bg-indigo-600 text-white p-2 rounded-lg">
+                        <div class="bg-emerald-700 text-white p-2 rounded-lg">
                             <i data-lucide="parking-square" class="w-6 h-6"></i>
                         </div>
                         <div>
@@ -105,7 +105,7 @@
                 </button>
 
                 <div id="admin-nav-group" class="hidden pt-4">
-                    <p class="px-4 py-2 text-xs font-black text-indigo-600 uppercase tracking-widest">Super Admin</p>
+                    <p class="px-4 py-2 text-xs font-black text-emerald-700 uppercase tracking-widest">Super Admin</p>
                     <button onclick="changeTab('superadmin')" id="nav-superadmin" class="sidebar-link">
                         <i data-lucide="shield-check" class="w-5 h-5"></i> Panel SaaS
                     </button>
@@ -116,11 +116,11 @@
                 <div class="p-3 rounded-lg bg-slate-50 border border-slate-100 flex items-center gap-3">
                     <div class="relative shrink-0">
                         <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full absolute -right-0.5 -bottom-0.5 border-2 border-white"></span>
-                        <div class="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-black text-xs" id="sidebar-user-avatar" aria-hidden="true">C</div>
+                        <div class="w-9 h-9 bg-emerald-700 rounded-lg flex items-center justify-center text-white font-black text-xs" id="sidebar-user-avatar" aria-hidden="true">C</div>
                     </div>
                     <div class="flex-1 min-w-0">
                         <p class="text-xs font-bold text-slate-800 truncate" id="sidebar-user-email">Cargando...</p>
-                        <p class="text-[11px] font-black tracking-widest uppercase text-slate-500" id="sidebar-trial-status">Sesión activa</p>
+                        <p class="text-xs font-black tracking-widest uppercase text-slate-600" id="sidebar-trial-status">Sesión activa</p>
                     </div>
                 </div>
                 <button onclick="window.fbLogout()" class="btn btn-danger-soft w-full justify-center">
@@ -160,11 +160,11 @@
                 <section id="tab-dashboard" class="tab-content space-y-6">
                     <div class="grid grid-cols-2 xl:grid-cols-5 gap-3 md:gap-4">
                         <article class="metric-card">
-                            <div class="metric-icon bg-indigo-50 text-indigo-600"><i data-lucide="layout-grid" class="w-5 h-5"></i></div>
+                            <div class="metric-icon bg-emerald-50 text-emerald-700"><i data-lucide="layout-grid" class="w-5 h-5"></i></div>
                             <p class="metric-label">Ocupación</p>
                             <h3 id="stat-occupancy" class="metric-value">0/50</h3>
                             <div class="w-full bg-slate-100 rounded-full h-2 mt-3 overflow-hidden">
-                                <div id="occupancy-progress" class="bg-indigo-600 h-full rounded-full transition-all"></div>
+                                <div id="occupancy-progress" class="bg-emerald-600 h-full rounded-full transition-all"></div>
                             </div>
                         </article>
                         <article class="metric-card">
@@ -585,14 +585,14 @@
                 </section>
 
                 <section id="tab-superadmin" class="tab-content hidden space-y-6">
-                    <div class="panel bg-indigo-950 text-white border-indigo-900">
-                        <div class="panel-header border-indigo-900">
+                    <div class="panel bg-emerald-950 text-white border-emerald-900">
+                        <div class="panel-header border-emerald-900">
                             <div>
                                 <h3 class="text-xl font-black tracking-tight flex items-center gap-2">
-                                    <i data-lucide="shield-check" class="w-5 h-5 text-indigo-300"></i>
+                                    <i data-lucide="shield-check" class="w-5 h-5 text-emerald-300"></i>
                                     Panel Maestro SaaS
                                 </h3>
-                                <p class="text-sm text-indigo-200 font-medium mt-1">Administración básica de cuentas y licencias.</p>
+                                <p class="text-sm text-emerald-200 font-medium mt-1">Administración básica de cuentas y licencias.</p>
                             </div>
                             <button onclick="window.fbLogout()" class="btn bg-white/10 hover:bg-white/20 text-white border border-white/20">
                                 <i data-lucide="log-out" class="w-4 h-4"></i>
